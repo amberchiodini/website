@@ -1,0 +1,19 @@
+---
+title: "Amber Chiodini"
+image: "images/profile.jpg"
+links:
+  - label: '<i class="fab fa-linkedin"></i> LinkedIn'
+    url: "https://www.linkedin.com/in/amber-chiodini-9699b211b/"
+  - label: '<i class="fab fa-twitter"></i> Twitter'
+    url: "https://twitter.com/amberchiodini"
+  - label: '<i class="fab fa-github"></i> GitHub'
+    url: "https://github.com/amberchiodini"
+  - label: '<i class="fas fa-file"></i> Resume'
+    url: "images/Chiodini_Resume.pdf"
+  - label: '<i class="fas fa-envelope"></i> Email'
+    url: "mailto:amber.park@northwestern.edu"
+output:
+  postcards::jolla
+site: distill::distill_website
+---
+I am currently a part-time undergraduate student at Northwestern University and am majoring in Biological Sciences. I also work full-time as a research technician in a lab that studies electrophysiology in zebrafish.
