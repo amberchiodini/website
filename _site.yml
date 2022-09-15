@@ -3,7 +3,7 @@ title: "Amber Chiodini"
 description: |
   My Website
 base_url: 
-output_dir: "."
+output_dir: "docs"
 navbar:
   right:
     - text: "Home"
