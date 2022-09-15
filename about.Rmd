@@ -2,10 +2,6 @@
 title: "About me"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
-
 Welcome to my personal website! 👋  
 
 I first became involved with research through Dr. Ryan Wong, a Professor of Biology at the University of Nebraska-Omaha. He is broadly interested in trying to understand the contributing factors to variation in animal behavior, particularly on a neural and molecular basis. In the lab, we investigated the mechanisms underlying stress coping styles and related behaviors in zebrafish. I assisted with these projects by feeding and monitoring the zebrafish while maintaining cleanliness in the laboratory per Dr. Wong’s instructions. I also performed water changes and chemical assessments on a weekly basis. I learned how to create a brine shrimp hatchery and maintain the housing system.
@@ -15,3 +11,6 @@ I continued to advance my research skills at Northwestern University on the Chic
 I currently work as a research technician in the [Department of Neurobiology](https://neurobiology.northwestern.edu/) where my duties have expanded to managing a lab and zebrafish colony and being responsible for the training and supervision of the undergraduates for fish care. 
 
 When I am not building up a zebrafish army for world domination, I like to hang out with my husband and fur babies at a local brewery or watch a movie. 
+
+![](images/meandhubby.jpg) 
+![](images/theboys.jpeg)
