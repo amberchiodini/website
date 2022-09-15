@@ -8,6 +8,7 @@ date: 2022-09-14
 output:
   distill::distill_article:
     self_contained: false
+    code_folding: Code
 ---
 ## Introduction 
 
@@ -23,19 +24,161 @@ The goal of this project is to analyze the "All Playstation 4 Games" dataset and
 2. What is the relationship between average completion time and games? 
 3. Who are the most popular publishers and developers & how many action games did they produce?
 
-## Citation
+```{r eval=FALSE}
+#| label: load-pkgs-data
+# Load package(s)
+library(tidyverse)
+library(dplyr)
+library(patchwork)
 
--   Shivam, B. (2022). All Playstation 4 Games, Version 1. Retrieved August 21, 2022 from https://www.kaggle.com/datasets/shivamb/all-playstation-4-games.
+# Read in the data 
+play_data <- readr::read_csv("data/playstation_4_games.csv") %>% 
+  filter(between(ReleaseYear, as.numeric('2013'), as.numeric('2022')))
+```
 
 ## Graphic 1
+
+```{r eval=FALSE}
+#| label: question-1-barplot
+
+# Build plot
+ggplot(data = play_data, mapping = aes(x = ReleaseYear)) +
+  geom_bar(fill = "#2E6DB4") + 
+  geom_text(stat='count', aes(label = ..count..), vjust = -1) +
+  scale_x_continuous(
+    name = "Release Year", 
+    breaks = 2013:2022
+  ) + 
+  scale_y_continuous(
+    name = "Number of Games", 
+    limits = c(0, 2000),
+    breaks = seq(0, 2000, 500),
+    labels = scales::label_comma(), 
+    expand = c(0, 0) 
+  ) + 
+  theme_classic() +
+  ggtitle("Number of games released each year") +
+  theme (
+    plot.title = ggtext::element_markdown(hjust = 0.5))
+```
+
 
 ![](images/plot1.png)
 
 ## Graphic 2 
 
+```{r eval=FALSE}
+#| label: question-2-plot
+
+# Data 
+labels_hours = c("0-1", "1-2", "3-4", "5-6", "6-8", "8-10", "10-12", "12-15", "15-20", "20-25", "25-30", "30-35", "35-40", "40-50", "50-60", "60-80", "80-100", "100-120", "120-150", "150-200", "200+")
+
+CompletionTime <- subset(play_data, `CompletionTime(Hours)`!="nan")
+
+# Build plot 
+ggplot(data = CompletionTime, mapping = aes(x = `CompletionTime(Hours)`, fill = `CompletionTime(Hours)`)) + 
+  geom_bar() + 
+  # geom_text(stat='count', aes(label = ..count..), vjust = -1) + 
+  scale_x_discrete(
+    name = "Average Completion Time (Hours)", 
+    limits = factor(labels_hours, level = c("0-1", "1-2", "3-4", "5-6", "6-8", "8-10", "10-12", "12-15", "15-20", "20-25", "25-30", "30-35", "35-40", "40-50", "50-60", "60-80", "80-100", "100-120", "120-150", "150-200", "200+"))
+  ) + 
+  scale_y_continuous(
+    name = "Number of Games",
+    limits = c(0, 850),
+    breaks = seq(0, 850, 100),
+    expand = c(0, 0)
+  ) +
+  theme_classic() +
+  ggtitle("Number of games at different durations") + 
+  theme (
+    plot.title = ggtext::element_markdown(hjust = 0.5), 
+    axis.text.x=element_text(angle = 90, hjust = 0.5), 
+    legend.position = "none"
+  )
+```
+
 ![](images/plot2.png)
 
 ## Graphic 3 
+
+```{r eval=FALSE}
+#| label: question-3-plot-w-developers
+#| fig-height: 4
+#| fig-width: 9
+
+# Data
+labels_dev <- c("Capcom Entertainment", "Arc System Works", "Omega Force", "Square Enix", "Breakthrough Gaming", "Konami Digital Entertainment", "Nippon Ichi Software", "Smobile", "Lightwood Games", "Hamster")
+
+genre <- play_data$Genre == "Action"
+
+# Build plot
+pop_dev <- ggplot(data = play_data, mapping = aes(x = Developer, fill = genre))+
+  geom_bar() + 
+  coord_flip() +
+  scale_x_discrete(
+    name = "Developers",
+    limits = factor(labels_dev, level = c("Capcom Entertainment", "Arc System Works", "Omega Force", "Square Enix", "Breakthrough Gaming", "Konami Digital Entertainment", "Nippon Ichi Software", "Smobile", "Lightwood Games", "Hamster")), 
+    ) +
+  scale_y_continuous(
+    name = "Number of Games",
+    limits = c(0, 130),
+    breaks = seq(0, 130, 20),
+    expand = c(0, 0)
+  ) +
+  scale_fill_manual(
+    name = "Genre", 
+    labels = c("Not Action", "Action"), 
+    values = c("#2E6DB4", "#00AC9F")
+  ) + 
+  theme_classic() +
+  ggtitle("Top 10 Most Popular Developers") +
+  theme(
+    plot.title = ggtext::element_markdown(hjust = 0.5))
+
+pop_dev
+```
+
+```{r eval=FALSE}
+#| label: question-3-plot-w-publishers
+#| fig-height: 4
+#| fig-width: 9
+
+# Data 
+labels_pub <- c("Sony Computer Entertainment", "Ubisoft", "KOEI TECMO", "SEGA", "Sometimes You", "Square Enix", "Bandai Namco Entertainment", "Hamster", "Ratalaika Games", "eastasiasoft")
+
+genre <- play_data$Genre == "Action"
+
+# Build plot 
+pop_pub <- ggplot(data = play_data, mapping = aes(x = Publisher, fill = genre)) +
+  geom_bar() + 
+  coord_flip() +
+  scale_x_discrete(
+    name = "Publishers", 
+    limits = factor(labels_pub, level = c("Sony Computer Entertainment", "Ubisoft", "KOEI TECMO", "SEGA", "Sometimes You", "Square Enix", "Bandai Namco Entertainment", "Hamster", "Ratalaika Games", "eastasiasoft"))) + 
+  scale_y_continuous(
+    name = "Number of Games", 
+    limits = c(0, 510), 
+    breaks = seq(0, 510, 50), 
+    expand = c(0, 0)
+  ) +
+  scale_fill_manual(
+    name = "Genre", 
+    labels = c("Not Action", "Action"), 
+    values = c("#2E6DB4", "#00AC9F")
+  ) + 
+  theme_classic() +
+  ggtitle("Top 10 Most Popular Publishers") + 
+  theme(
+    plot.title = ggtext::element_markdown(hjust = 0.5))
+
+pop_pub
+```
+
+```{r eval=FALSE}
+#| label: pop_dev & pop_pub
+pop_dev / pop_pub
+```
 
 ![](images/plot3.png)
 
@@ -43,3 +186,7 @@ The goal of this project is to analyze the "All Playstation 4 Games" dataset and
 
 -   These graphics help to communicate the dataset, such as the amount of games that were released each year, their average completion time, and the top ten most popular developers and publishers.\
 -   However, some graphics do not translate the data well, which can bring limitations to the story-telling. Therefore, the bar charts were used because they emphasized the dramatic differences between different variables (e.g. developers, publishers, games).
+
+## Citation
+
+-   Shivam, B. (2022). All Playstation 4 Games, Version 1. Retrieved August 21, 2022 from https://www.kaggle.com/datasets/shivamb/all-playstation-4-games.
